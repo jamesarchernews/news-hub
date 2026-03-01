@@ -3,6 +3,8 @@ on:
   push:
     branches: [ master, main ]
   workflow_dispatch:
+  schedule:
+    - cron: '0 * * * *' # This will now update your news every hour automatically
 
 permissions:
   contents: write
@@ -13,15 +15,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 22 # Fixed: Now meets the requirement of the news engine
+          node-version: 22 # Required to fix the ERR_INVALID_ARG_TYPE error
 
-      - name: Build News Site
+      - name: Build Site
         run: |
           npm install @osmoscraft/osmosfeed
           npx @osmoscraft/osmosfeed build
@@ -29,7 +28,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./public # Fixed: Matches where the log says it wrote the files
+          path: ./public # The log confirms the engine writes to 'public'
 
   deploy:
     environment:
