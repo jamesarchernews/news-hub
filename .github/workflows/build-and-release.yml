@@ -1,11 +1,11 @@
 name: build-and-release
 on:
   schedule:
-    - cron: '0 * * * *' # Updates every hour
+    - cron: '0 * * * *' # Updates hourly
   push:
     branches:
-      - main
-  workflow_dispatch: # Allows you to run it manually
+      - master # Ensure this matches your branch name (e.g., 'main' or 'master')
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -24,8 +24,10 @@ jobs:
         with:
           node-version: 18
 
-      - name: Build Feed
+      - name: Clean and Build
         run: |
+          # Removes old locks to prevent Exit Code 2 sync errors
+          rm -f package-lock.json
           npm install
           npx osmosfeed build
 
