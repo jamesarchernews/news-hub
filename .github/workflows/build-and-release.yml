@@ -1,10 +1,7 @@
 name: build-and-release
 on:
-  schedule:
-    - cron: '0 * * * *' # Updates hourly
   push:
-    branches:
-      - master # Ensure this matches your branch name (e.g., 'main' or 'master')
+    branches: [ master, main ]
   workflow_dispatch:
 
 permissions:
@@ -24,13 +21,12 @@ jobs:
         with:
           node-version: 18
 
-      - name: Clean and Build
+      - name: Build Feed
         run: |
-          # Removes old locks to prevent Exit Code 2 sync errors
-          rm -f package-lock.json
           npm install
-          npx osmosfeed build
-
+          # We use the full scoped name to ensure the command runs
+          npx @osmoscraft/osmosfeed build
+          
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
