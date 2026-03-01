@@ -21,11 +21,12 @@ jobs:
         with:
           node-version: 18
 
-      - name: Build Feed
+      - name: Build News Site
         run: |
-          npm install
-          # We use the full scoped name to ensure the command runs
+          npm install @osmoscraft/osmosfeed
+          # Force the build and list files to see if 'dist' appeared
           npx @osmoscraft/osmosfeed build
+          if [ ! -d "dist" ]; then echo "Error: dist folder was not created!"; exit 1; fi
           
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
