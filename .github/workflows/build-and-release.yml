@@ -13,25 +13,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Build Site
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22 # Fixed: Now meets the requirement of the news engine
+
+      - name: Build News Site
         run: |
           npm install @osmoscraft/osmosfeed
           npx @osmoscraft/osmosfeed build
-          # This creates a dummy index if the build fails, to prevent the tar error
-          if [ ! -d "dist" ]; then 
-            mkdir dist
-            echo "Build failed to generate content. Check your osmosfeed.yaml for errors." > dist/index.html
-          fi
-
+          
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: ./public # Fixed: Matches where the log says it wrote the files
 
   deploy:
     environment:
