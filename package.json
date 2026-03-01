@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "osmosfeed": "^1.1.0"
+    "@osmoscraft/osmosfeed": "^1.1.0"
   }
 }
